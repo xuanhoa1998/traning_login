@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
-from demo.models import User
+from demo.models import User, UserRole, UserGrChat
 
 UserModel = get_user_model()
 
@@ -13,7 +12,6 @@ class CreateUserSerializers(serializers.ModelSerializer):
             username=validate_data['username'],
             password=validate_data['password'],
             email=validate_data['email'],
-
         )
         return user
 
@@ -43,13 +41,14 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class GetListUsersSerializers(serializers.ModelSerializer):
-    username = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
 
     def get_role(self, obj):
-        return obj.username
+        return obj.user_role.name
+
     class Meta:
         model = UserModel
-        fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'tel3')
+        fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'tel3', 'role')
 
     @classmethod
     def setup_eager_loading(cls, queryset):
@@ -60,3 +59,9 @@ class PanigationSerializers(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'tel3')
+
+
+class PostChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserGrChat
+        fields = ("id", "content_text")

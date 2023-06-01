@@ -51,3 +51,16 @@ class User(AbstractUser):
     is_hidden = models.BooleanField(default=False, help_text='非表示ユーザフラグ')
     title = models.CharField(max_length=15, blank=True, null=True)
     age = models.IntegerField(max_length=3)
+
+
+class GroupChat(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=128)
+    gr_user_id = models.ManyToManyField(User)
+
+
+class UserGrChat(models.Model):
+    id = models.IntegerField(primary_key=True)
+    content_text = models.CharField(max_length=255)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GroupChat, on_delete=models.CASCADE)

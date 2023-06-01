@@ -3,12 +3,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView, ListAPIView, get_object_or_404
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
+    ListCreateAPIView
 from rest_framework import permissions, status, generics, pagination, viewsets
-from demo.models import User
-from demo.serializers import CreateUserSerializers, ChangePasswordSerializer
+from demo.models import User, UserGrChat
+from demo.serializers import CreateUserSerializers, ChangePasswordSerializer, PostChatSerializer
 from demo.serializers import MyProfileSerializer, GetListUsersSerializers, PanigationSerializers
-from rest_framework.viewsets import ModelViewSet
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -34,7 +34,6 @@ class CreateUserView(CreateAPIView):
 
 
 class GetProfile(RetrieveUpdateAPIView):
-    # permission_classes = [IsAdminUser]
     serializer_class = MyProfileSerializer
 
     def get_object(self):
@@ -42,39 +41,38 @@ class GetProfile(RetrieveUpdateAPIView):
 
 
 class ChangePassword(UpdateAPIView):
-    serializer_class = ChangePasswordSerializer
-    permission_classes = (IsAuthenticated,)
+        serializer_class = ChangePasswordSerializer
+        permission_classes = (IsAuthenticated,)
 
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
+        def get_object(self, queryset=None):
+            obj = self.request.user
+            return obj
 
-    def update(self, request):
-        self_object = self.get_object()
-        try:
-            if self.get_serializer(data=request.data).is_valid():
-                if not self_object.check_password(request.data.get("old_password")):
-                    return Response({"old_password": ["Wrong password"]}, status=status.HTTP_400_BAD_REQUEST)
-                self_object.set_password(request.data.get("new_password"))
-                self_object.save()
-                response = {
-                    'code': status.HTTP_200_OK,
-                    'message': 'Password updated successfully'
-                }
-                return Response(response)
-            return Response(self.get_serializer(data=request.data).errors, status=status.HTTP_400_BAD_REQUEST)
-        except SignatureExpired:
-            return Response(status=status.HTTP_410_GONE)
+        def update(self, request):
+            self_object = self.get_object()
+            try:
+                if self.get_serializer(data=request.data).is_valid():
+                    if not self_object.check_password(request.data.get("old_password")):
+                        return Response({"old_password": ["Wrong password"]}, status=status.HTTP_400_BAD_REQUEST)
+                    self_object.set_password(request.data.get("new_password"))
+                    self_object.save()
+                    response = {
+                        'code': status.HTTP_200_OK,
+                        'message': 'Password updated successfully'
+                    }
+                    return Response(response)
+                return Response(self.get_serializer(data=request.data).errors, status=status.HTTP_400_BAD_REQUEST)
+            except SignatureExpired:
+                return Response(status=status.HTTP_410_GONE)
 
 
-class GetListUsers(viewsets.ModelViewSet):
+class GetListUsers(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = GetListUsersSerializers
 
     def get_queryset(self):
-        queryset = User.objects.filter()
+        return User.objects.filter().exclude(user_role__name='admin')
 
-        return queryset
 
 class BillingRecordsView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -89,3 +87,27 @@ class BillingRecordsView(generics.ListAPIView):
             return user_name.filter().exclude(user_role__name='admin')
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'email': 'demo'})
+
+
+class PostChat(CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PostChatSerializer
+
+    def get_queryset(self):
+        return User.objects.get(pk=self.request.user.id)
+
+    def post(self, request, *args, **kwargs):
+        content = request.data.get('content_text')
+        group_id = request.data.get('group_id')
+        id_user = request.user
+
+        UserGrChat.objects.create(
+            content_text=content,
+            user_id=id_user,
+            group_id=group_id
+
+            # return_order=order,
+            # content=DefaultContentTimeline.CONTENT.format(
+            #     OrderStatusOnTimeline.DISPOSAL, current_user.name
+        ),
+        return Response(status=status.HTTP_200_OK, data={'email': 'demo'})

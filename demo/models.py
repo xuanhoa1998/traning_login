@@ -54,13 +54,11 @@ class User(AbstractUser):
 
 
 class GroupChat(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
     gr_user_id = models.ManyToManyField(User)
 
 
 class UserGrChat(models.Model):
-    id = models.IntegerField(primary_key=True)
     content_text = models.CharField(max_length=255)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     group_id = models.ForeignKey(GroupChat, on_delete=models.CASCADE)

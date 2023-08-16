@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from demo.models import User, UserRole, UserGrChat
+from demo.models import User, UserRole, UserGrChat, GroupChat
 
 UserModel = get_user_model()
 
@@ -48,7 +48,7 @@ class GetListUsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'tel3', 'role')
+        fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'role')
 
     @classmethod
     def setup_eager_loading(cls, queryset):
@@ -65,3 +65,15 @@ class PostChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserGrChat
         fields = ("id", "content_text")
+
+
+class CreateGroup(serializers.ModelSerializer):
+    class Meta:
+        model = GroupChat
+        fields = ('id', 'name')
+
+
+class DeleteGroup(serializers.ModelSerializer):
+    class Meta:
+        model = GroupChat
+        fields = '_all_'

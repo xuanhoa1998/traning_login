@@ -45,7 +45,6 @@ class GetProfile(RetrieveUpdateAPIView):
 class ChangePassword(UpdateAPIView):
         serializer_class = ChangePasswordSerializer
         permission_classes = (IsAuthenticated,)
-
         def get_object(self, queryset=None):
             obj = self.request.user
             return obj
@@ -164,7 +163,7 @@ class PostChat(CreateAPIView):
             user_id=id_user,
             group_id=group
         ),
-        return Response(status=status.HTTP_200_OK, data={'thanh cong ': 'postChat'})
+        return Response(status=status.HTTP_200_OK, data={'thanh cong'})
 
 
 class CreateGroup(CreateAPIView):
@@ -196,3 +195,4 @@ class DeleteGroup(DestroyAPIView):
                 return Response(status=status.HTTP_200_OK, data={'delete success'})
 
         # Exception
+

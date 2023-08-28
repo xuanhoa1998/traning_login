@@ -50,7 +50,7 @@ class User(AbstractUser):
     registed_at = models.DateTimeField(blank=True, null=True, help_text='本登録した日付')
     is_hidden = models.BooleanField(default=False, help_text='非表示ユーザフラグ')
     title = models.CharField(max_length=15, blank=True, null=True)
-    age = models.IntegerField(max_length=3)
+    age = models.IntegerField(max_length=3, null=True)
 
 
 class GroupChat(models.Model):

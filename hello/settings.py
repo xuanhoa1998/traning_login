@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_celery_beat',
     'demo',
     'corsheaders',
 ]
@@ -73,6 +74,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'hello.wsgi.application'
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+
 
 
 # Database

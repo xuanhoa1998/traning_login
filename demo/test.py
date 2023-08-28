@@ -23,8 +23,10 @@ class CreateUserSerializers(serializers.ModelSerializer):
         def create(self, validate_data):
             username=validate_data['username'],
             password=validate_data['password'],
-#             password=validate_data['password'],
-#             email=validate_data['email'],
+
+            password=validate_data['password'],
+            email=validate_data['email'],
+
         )
         user = UserModel.objects.create_user(
             username=validate_data['username'],
@@ -35,9 +37,10 @@ class CreateUserSerializers(serializers.ModelSerializer):
         return user
 
 
-#     class Meta:
-#         model = UserModel
-#         fields = ('username', 'password', 'email')
+class Meta:
+    thinh
+    model = UserModel
+    fields = ('username', 'password', 'email')
 #
 #
 # class MyProfileSerializer(serializers.ModelSerializer):

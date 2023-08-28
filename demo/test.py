@@ -7,6 +7,7 @@ UserModel = get_user_model()
 
 class CreateUserSerializers(serializers.ModelSerializer):
 
+
 #     def create(self, validate_data):
 #         user = UserModel.objects.create_user(
 #             username=validate_data['username'],
@@ -15,6 +16,24 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
 #         )
 #         return user
+
+    def create(self, validate_data):
+        user = UserModel.objects.create_user(
+
+        def create(self, validate_data):
+            username=validate_data['username'],
+            password=validate_data['password'],
+            password=validate_data['password'],
+            email=validate_data['email'],
+        )
+        user = UserModel.objects.create_user(
+            username=validate_data['username'],
+            password=validate_data['password'],
+            password=validate_data['password'],
+            email=validate_data['email'],
+        )
+        return user
+
 
     class Meta:
         model = UserModel
@@ -89,7 +108,16 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
     def create(self, validate_data):
         user = UserModel.objects.create_user(
+
+        def create(self, validate_data):
             username=validate_data['username'],
+            password=validate_data['password'],
+            password=validate_data['password'],
+            email=validate_data['email'],
+        )
+        user = UserModel.objects.create_user(
+            username=validate_data['username'],
+            password=validate_data['password'],
             password=validate_data['password'],
             email=validate_data['email'],
         )

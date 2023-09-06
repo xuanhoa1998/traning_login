@@ -1,6 +1,6 @@
 from django.urls import path
 from demo.views import MyTokenObtainPairView, CreateUserView,\
-        GetProfile, ChangePassword, GetListUsers, BillingRecordsView, PostChat, CreateGroup, DeleteGroup
+        GetProfile, ChangePassword, GetListUsers, BillingRecordsView, PostChat, CreateGroup, DeleteGroup, GetListUserInOneGroupView
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_refresh'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('postChat/', PostChat.as_view(), name='postChat'),
     path('createGroup/', CreateGroup.as_view(), name='createGroup'),
     path('deleteGroup/', DeleteGroup.as_view(), name='deleteGroup'),
+    path('getListUserInOneGr/', GetListUserInOneGroupView.as_view(), name='GetListUserInOneGroupView'),
 
 
 ]

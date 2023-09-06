@@ -28,7 +28,7 @@ class MyProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('username', 'password', 'email', 'age')
+        fields = ('username', 'password', 'email', 'age', 'role')
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
@@ -48,11 +48,7 @@ class GetListUsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'role')
-
-    @classmethod
-    def setup_eager_loading(cls, queryset):
-        pass
+        fields = ('id', 'username', 'title', 'email', 'email_signature', 'tel1', 'tel2', 'role')
 
 
 class PanigationSerializers(serializers.ModelSerializer):
@@ -77,3 +73,26 @@ class DeleteGroup(serializers.ModelSerializer):
     class Meta:
         model = GroupChat
         fields = '_all_'
+
+
+class GetListUserInOneGroupSerializer(serializers.ModelSerializer):
+    roles = serializers.SerializerMethodField()
+
+    def get_role(self, obj):
+        return obj.user_role.name
+
+    class Meta:
+        model = GroupChat
+        fields = ('id', 'name', 'role')
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=True)
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=8, write_only=True)
+    groups = GetListUserInOneGroupSerializer(many=True)
+
+    class Meta:
+        model = UserGrChat
+        fields = ('id', 'email', 'username', 'password', 'groups',)
+        extra_kwargs = {'password': {'write_only': True}}

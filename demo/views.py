@@ -72,7 +72,7 @@ class GetListUsers(ListCreateAPIView):
     serializer_class = GetListUsersSerializers
 
     def get_queryset(self):
-        return User.objects.filter(user_role__name='admin')
+        return User.objects.filter(user_role__name='master')
 
 
 class BillingRecordsView(generics.ListAPIView):
@@ -140,10 +140,10 @@ class DeleteGroup(DestroyAPIView):
         # Exception
 
 
-class GetListUserInOneGroupView(ListCreateAPIView):
+class GetListUserInOneGroupView(RetrieveUpdateAPIView):
     serializer_class = GetListUserInOneGroupSerializer
 
-    def get(self, request):
-        queryset = User.objects.all()
+    def get_object(self):
+        queryset = GroupChat.objects.get(pk=self.get_object())
         serializer = CustomUserSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)

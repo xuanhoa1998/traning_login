@@ -12,7 +12,7 @@ urlpatterns = [
     path('postChat/', PostChat.as_view(), name='postChat'),
     path('createGroup/', CreateGroup.as_view(), name='createGroup'),
     path('deleteGroup/', DeleteGroup.as_view(), name='deleteGroup'),
-    path('getListUserInOneGr/', GetListUserInOneGroupView.as_view(), name='GetListUserInOneGroupView'),
+    path('getListUserInOneGr/<str:pk>', GetListUserInOneGroupView.as_view(), name='GetListUserInOneGroupView'),
 
 
 ]

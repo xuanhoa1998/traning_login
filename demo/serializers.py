@@ -44,7 +44,16 @@ class GetListUsersSerializers(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
 
     def get_role(self, obj):
-        return obj.user_role.name
+        list = []
+        user_roles = UserRole.objects.all()
+        for user in user_roles:
+            list.append(
+                {
+                    "user_role": user.name,
+                    "id": user.id
+                }
+            )
+        return list
 
     class Meta:
         model = UserModel
@@ -87,12 +96,10 @@ class GetListUserInOneGroupSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(required=True)
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(min_length=8, write_only=True)
-    groups = GetListUserInOneGroupSerializer(many=True)
+    user_list = []
+
+    # def get_user_list(self,obj):
 
     class Meta:
         model = UserGrChat
-        fields = ('id', 'email', 'username', 'password', 'groups',)
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ('id')

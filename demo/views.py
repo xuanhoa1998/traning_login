@@ -11,6 +11,8 @@ from demo.serializers import CreateUserSerializers, ChangePasswordSerializer, Po
     GetListUserInOneGroupSerializer, CustomUserSerializer
 from demo.serializers import MyProfileSerializer, GetListUsersSerializers, PanigationSerializers
 
+from django.core.mail import send_mail
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -38,6 +40,12 @@ class GetProfile(RetrieveUpdateAPIView):
     serializer_class = MyProfileSerializer
 
     def get_object(self):
+        send_mail(
+            "this is  a email test",
+            "Message.",
+            "from@example.com",
+            ["dinhthinh1712@gmail.com"],
+        )
         return User.objects.get(pk=self.request.user.id)
 
 
